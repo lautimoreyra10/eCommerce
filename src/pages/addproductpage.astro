@@ -1,0 +1,153 @@
+---
+interface ProductData {
+  name: string;
+  description: string;
+  price: string;
+  category: string;
+  imageUrl: string;
+}
+let message : string = '';
+let productData: ProductData = {
+  name: "",
+  description: "",
+  price: "",
+  category: "",
+  imageUrl: "",
+};
+---
+
+<div class="container">
+  <h2>Agregar Producto</h2>
+  {message && <p>{message}</p>}
+  <form id="addProductForm">
+    <div class="form-group">
+      <label for="name">Nombre</label>
+      <input type="text" id="name" placeholder="Nombre del producto" required />
+    </div>
+    <div class="form-group">
+      <label for="description">Descripción</label>
+      <textarea id="description" placeholder="Descripción del producto" required
+      ></textarea>
+    </div>
+    <div class="form-group">
+      <label for="price">Precio</label>
+      <input
+        type="number"
+        id="price"
+        placeholder="Precio del producto"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="category">Categoría</label>
+      <input
+        type="text"
+        id="category"
+        placeholder="Categoría del producto"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="imageUrl">URL de la Imagen</label>
+      <input
+        type="text"
+        id="imageUrl"
+        placeholder="URL de la imagen del producto (opcional)"
+      />
+    </div>
+    <button type="submit">Publicar Producto</button>
+  </form>
+</div>
+
+<script>
+  let message: string = "";
+  const form = document.getElementById("addProductForm") as HTMLFormElement;
+  const productData = {
+    name: "",
+    description: "",
+    price: "",
+    category: "",
+    imageUrl: "",
+  };
+
+  form?.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    // Obtener los valores del formulario
+    productData.name = (
+      document.getElementById("name") as HTMLInputElement
+    ).value;
+    productData.description = (
+      document.getElementById("description") as HTMLTextAreaElement
+    ).value;
+    productData.price = (
+      document.getElementById("price") as HTMLInputElement
+    ).value;
+    productData.category = (
+      document.getElementById("category") as HTMLInputElement
+    ).value;
+    productData.imageUrl = (
+      document.getElementById("imageUrl") as HTMLInputElement
+    ).value;
+
+    // Validación básica
+    if (
+      !productData.name ||
+      !productData.description ||
+      !productData.price ||
+      !productData.category
+    ) {
+      message = "Por favor, completa todos los campos obligatorios.";
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      message = "Debes iniciar sesión para agregar un producto.";
+      return;
+    }
+
+    // Enviar datos a la API
+    fetch("https://commercial-api.vulktech.com/products", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(productData),
+    })
+      .then((res) => {
+        if (res.ok) {
+          message = "Producto publicado con éxito";
+          window.location.href = "/";
+        } else {
+          return res.json().then((error) => {
+            message = `Error: ${error.message || "Error al agregar el producto"}`;
+          });
+        }
+      })
+      .catch(() => {
+        message = "Error en la conexión";
+      });
+  });
+
+  // Actualizar valores de los campos al escribir
+  document.getElementById("name")?.addEventListener("input", (e) => {
+    productData.name = (e.target as HTMLInputElement).value;
+  });
+  document.getElementById("description")?.addEventListener("input", (e) => {
+    productData.description = (e.target as HTMLTextAreaElement).value;
+  });
+  document.getElementById("price")?.addEventListener("input", (e) => {
+    productData.price = (e.target as HTMLInputElement).value;
+  });
+  document.getElementById("category")?.addEventListener("input", (e) => {
+    productData.category = (e.target as HTMLInputElement).value;
+  });
+  document.getElementById("imageUrl")?.addEventListener("input", (e) => {
+    productData.imageUrl = (e.target as HTMLInputElement).value;
+  });
+</script>
+
+<style>
+  @import "/src/styles/styles.css";
+</style>

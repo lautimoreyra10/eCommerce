@@ -1,0 +1,26 @@
+---
+interface ProtectedRouteProps {
+  children: any;
+}
+
+const protectedroute = ({ children }: ProtectedRouteProps) => {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    // Redirige al login si no hay token
+    window.location.href = "/login";
+    return null;
+  }
+
+  // Si hay token, muestra el contenido protegido
+  return children;
+};
+---
+
+{protectedroute({
+  children: (
+    <>
+      <div>Contenido protegido</div>
+    </>
+  )
+})}

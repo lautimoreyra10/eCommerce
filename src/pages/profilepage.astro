@@ -1,0 +1,237 @@
+---
+
+let loading = true;
+let message = '';
+let redirect = false;
+
+// Función para obtener el perfil del usuario
+async function getUserProfile() {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    // navigate('/login'); Cambiar esto
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:5000/api/users/profile", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) throw new Error('Token inválido o expirado');
+    const data = await res.json();
+    userData = { ...data };
+    loading = false;
+  } catch (err) {
+    console.error(err);
+    localStorage.removeItem('token');
+    // navigate('/login'); Cambiar esto
+  }
+}
+
+// Inicializar los datos del usuario
+let userData = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  address: '',
+  document: '',
+  card: '',
+  imageUrl: '',
+  role: '',
+};
+
+let imageFile : any = null;
+
+// Función para manejar la subida de imagen
+function handleImageUpload(e) {
+  const file = e.target.files[0];
+  if (file) {
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (validImageTypes.includes(file.type)) {
+      imageFile = file;
+      message = '';
+    } else {
+      message = 'El archivo no es una imagen válida';
+      imageFile = null;
+    }
+  }
+}
+
+// Función para manejar los cambios en los inputs
+/* function handleInputChange(e) {
+  const { name, value } = e.target;
+  userData[name] = value;
+} */
+
+// Función para manejar el envío del formulario
+async function handleFormSubmit(e) {
+  e.preventDefault();
+  const token = localStorage.getItem('token');
+  const formData = new FormData();
+  formData.append('firstName', userData.firstName);
+  formData.append('lastName', userData.lastName);
+  formData.append('address', userData.address);
+  formData.append('document', userData.document);
+  formData.append('card', userData.card);
+  if (imageFile) {
+    formData.append('image', imageFile);
+  }
+
+  try {
+    const res = await fetch("http://localhost:5000/api/users/profile", {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    if (res.ok) {
+      const updatedData = await res.json();
+      userData = { ...updatedData };
+      message = "Perfil actualizado con éxito";
+
+      redirect = true;
+      setTimeout(() => {
+        //navigate('/add-product'); Cambiar esto
+      }, 5000);
+    } else {
+      const error = await res.text();
+      message = `Error al actualizar el perfil: ${error}`;
+    }
+  } catch (error) {
+    message = 'Error en la conexión';
+  }
+}
+
+// Llamar a la función para cargar el perfil del usuario al inicio
+getUserProfile();
+---
+
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perfil del Usuario</title>
+  </head>
+  <body>
+    <div class="profile-container">
+      <h1>Perfil del Usuario</h1>
+      {loading ? (
+        <div>Cargando Perfil...</div>
+      ) : (
+        <form class="profile-form" id="profile-form">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input
+              type="text"
+              name="firstName"
+              value={userData.firstName}
+              class="form-input"
+              placeholder="Nombre"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Apellido</label>
+            <input
+              type="text"
+              name="lastName"
+              value={userData.lastName}
+              class="form-input"
+              placeholder="Apellido"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Correo Electrónico</label>
+            <input
+              type="email"
+              name="email"
+              value={userData.email}
+              class="form-input"
+              placeholder="Correo Electrónico"
+              disabled
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Dirección</label>
+            <input
+              type="text"
+              name="address"
+              value={userData.address}
+              class="form-input"
+              placeholder="Dirección"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Documento</label>
+            <input
+              type="text"
+              name="document"
+              value={userData.document}
+              class="form-input"
+              placeholder="Documento de Identidad"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Tarjeta</label>
+            <input
+              type="text"
+              name="card"
+              value={userData.card}
+              class="form-input"
+              placeholder="Número de Tarjeta"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>URL de la Imagen de Perfil</label>
+            <input
+              type="text"
+              name="imageUrl"
+              value={userData.imageUrl}
+              class="form-input"
+              placeholder="URL de Imagen de Perfil"
+            />
+            {userData.imageUrl && (
+              <img
+                src={userData.imageUrl}
+                alt="Foto de Perfil"
+                class="profile-image"
+              />
+            )}
+          </div>
+
+          <div class="form-group">
+            <label>Subir imagen de perfil</label>
+            <input type="file" accept="image/*" id="image-upload" />
+          </div>
+
+          <button type="submit" class="save-button" id="submit-btn">
+            Guardar Cambios
+          </button>
+        </form>
+      )}
+
+      {message && <p class="message">{message}</p>}
+      {redirect && <p>Redirigiendo a la página principal en 5 segundos...</p>}
+    </div>
+
+    <script>
+      // Manejo de eventos en Astro
+      document.getElementById("profile-form").addEventListener("submit", handleFormSubmit);
+      document.getElementById("image-upload").addEventListener("change", handleImageUpload);
+
+      // Asignar el manejador de cambios para los inputs
+      document.querySelectorAll("input").forEach(input => {
+        input.addEventListener("input", handleInputChange);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+---
+interface Product {
+  image: string;
+  title: string;
+  price: number;
+}
+
+// Propiedades del producto
+const product: Product = {
+  image: "/src/assets/example.png",  // Reemplaza con la URL real de la imagen
+  title: "Nombre del producto",
+  price: 49.99,
+};
+---
+
+<div class="product-card">
+  <img src={product.image} alt={product.title} />
+  <div class="title">{product.title}</div>
+  <div class="price">${product.price}</div>
+</div>
+
+<style>
+@import "../styles/products.css";
+</style>

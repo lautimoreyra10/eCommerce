@@ -1,0 +1,66 @@
+---
+let message: string = "";
+---
+
+<html>
+  <head>
+    <link rel="stylesheet" href="../login.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Iniciar sesión</h1>
+      <form id="loginForm">
+        <input type="text" id="email" placeholder="Correo electrónico" />
+        <input type="password" id="password" placeholder="Contraseña" />
+        <button type="button" id="loginButton">Iniciar sesión</button>
+      </form>
+      {message && <p>{message}</p>}
+      <!-- Muestra el mensaje de error o éxito -->
+    </div>
+
+    <script>
+      let email = "";
+      let password = "";
+      let message = "";
+
+      const handleLogin = async () => {
+        try {
+          const res = await fetch("http://localhost:5000/api/users/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          });
+
+          if (res.ok) {
+            const data = await res.json();
+            localStorage.setItem("token", data.token);
+            message = "Login exitoso";
+            window.location.href = "/"; // Redirige a la página principal
+          } else {
+            const error = await res.text();
+            message = `Error: ${error}`;
+          }
+        } catch (error) {
+          message = "Error en la conexión";
+        }
+      };
+      document
+        .getElementById("loginButton")
+        ?.addEventListener("click", async () => {
+          // Obtén los valores de los campos de input
+          email = (document.getElementById("email") as HTMLInputElement).value;
+          password = (document.getElementById("password") as HTMLInputElement)
+            .value;
+
+          // Llama a la función de login
+          await handleLogin();
+
+          // Muestra el mensaje (en Astro, el DOM se actualiza después de la función)
+          const messageElement = document.querySelector("p");
+          if (messageElement) {
+            messageElement.innerHTML = message;
+          }
+        });
+    </script>
+  </body>
+</html>

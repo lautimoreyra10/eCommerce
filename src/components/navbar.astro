@@ -1,0 +1,45 @@
+---
+/* import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+ */
+// Carga el estado de autenticación desde el almacenamiento local (TypeScript)
+/* const isAuthenticated: boolean = Boolean(localStorage.getItem("token")); */
+---
+
+<style>
+  @import "/src/styles/navBar.css";
+</style>
+
+<nav class="navbar">
+  <div class="nameLogo">eCommerce</div>
+  <div class="search-bar">
+    <input type="text" placeholder="Buscar productos" />
+  </div>
+  <div class="links">
+    <a href="/">Inicio</a>
+    <a href="/products">Productos</a>
+    <a href="/about">Acerca de</a>
+    <button
+      id="user-icon-button"
+      class="user-icon-button"
+      style="background: none; border: none; cursor: pointer; padding: 0; margin: 0"
+    >
+    </button>
+  </div>
+</nav>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    const userIconButton = document.getElementById("user-icon-button");
+
+  /*   const isAuthenticated = Boolean(localStorage.getItem("token"));
+ */
+    function handleUserClick() {
+      if (isAuthenticated) {
+        window.location.href = "/profile";
+      } else {
+        window.location.href = "/login";
+      }
+    }
+  });
+</script>
