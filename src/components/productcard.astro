@@ -2,32 +2,9 @@
 const { product } = Astro.props; // Obtenemos el producto que se pasa como prop
 ---
 
-<div class="product-card">
-  <img src={product.imageUrl} alt={product.name} />
-  <h2>{product.name}</h2>
+<div class="border border-gray-300 rounded-lg shadow-md mb-5 p-4">
+  <img src={product.imageUrl} alt={product.name} class="w-full h-auto rounded-lg"/>
+  <h2 class="text-lg font-bold my-2">{product.name}</h2>
   <p>{product.description}</p>
-  <p>{product.price} USD</p>
+  <p class="text-blue-500 text-lg font-semibold">{product.price} USD</p>
 </div>
-
-<style>
-  .product-card {
-    border: 1px solid #ccc;
-    margin: 10px;
-    padding: 20px;
-    width: 200px;
-  }
-
-  .product-card img {
-    width: 100%;
-    height: auto;
-  }
-
-  .product-card h2 {
-    font-size: 18px;
-    margin: 10px 0;
-  }
-
-  .product-card p {
-    margin: 5px 0;
-  }
-</style>

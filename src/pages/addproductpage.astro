@@ -19,10 +19,10 @@ let productData: ProductData = {
 <div class="container">
   <h2>Agregar Producto</h2>
   {message && <p>{message}</p>}
-  <form id="addProductForm">
+  <form class="flex flex-col" id="addProductForm">
     <div class="form-group">
       <label for="name">Nombre</label>
-      <input type="text" id="name" placeholder="Nombre del producto" required />
+      <input class="w-full p-2 mb-2 border border-gray-300 rounded" type="text" id="name" placeholder="Nombre del producto" required />
     </div>
     <div class="form-group">
       <label for="description">Descripción</label>
@@ -36,6 +36,7 @@ let productData: ProductData = {
         id="price"
         placeholder="Precio del producto"
         required
+        class="w-full p-2 mb-2 border border-gray-300 rounded"
       />
     </div>
     <div class="form-group">
@@ -45,6 +46,7 @@ let productData: ProductData = {
         id="category"
         placeholder="Categoría del producto"
         required
+        class="w-full p-2 mb-2 border border-gray-300 rounded"
       />
     </div>
     <div class="form-group">
@@ -53,14 +55,12 @@ let productData: ProductData = {
         type="text"
         id="imageUrl"
         placeholder="URL de la imagen del producto (opcional)"
+        class="w-full p-2 mb-2 border border-gray-300 rounded"
       />
     </div>
-    <button type="submit">Publicar Producto</button>
+    <button class="bg-blue-500 text-white p-4 rounded hover:bg-blue-600" type="submit">Publicar Producto</button>
   </form>
 </div>
-<style>
-  @import "../styles/styles.css";
-</style>
 <script>
   let message: string = "";
   const form = document.getElementById("addProductForm") as HTMLFormElement;
