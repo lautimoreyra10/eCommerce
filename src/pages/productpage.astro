@@ -6,7 +6,6 @@ let product: any = null; /* Arreglar esto */
 const fetchProducts = async () => {
   const res = await fetch('/api/products');
   const data = await res.json();
-  setProducts(data);
 };
 fetchProducts();
 ---

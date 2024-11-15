@@ -1,5 +1,6 @@
 ---
 import ProductCard from "../components/productcard.astro";
+import Navbar from "../components/navbar.astro";
 let products = [] as Array<{ id: number, name: string, description: string, price: number, imageUrl: string }>;
 
 const fetchProducts = async () => {
@@ -23,18 +24,16 @@ await fetchProducts();
 <html>
   <head>
   </head>
-  <body class="font-sans text-gray-300">
-    <div class="container mx-auto max-w-screen-xl px-4">
-      <div class="home-page container">
-        <h1 class="welcome-title">Bienvenido a eCommerce</h1>
-      </div>
-    </div>
-    <div>
+  <body class="font-sans text-gray-700">
+    <Navbar/>
+    <div class="container mx-auto max-w-screen-xl px-4 mt-10">
       <div class="flex flex-wrap gap-5">
         <!-- Iteramos sobre los productos -->
         {products.length > 0 ? (
           products.map((product) => (
-            <ProductCard product={product} />
+            <div class="basis-full sm:basis-1/2 lg:basis-1/4 p-4">
+              <ProductCard product={product} />
+            </div>
           ))
         ) : (
           <p>No hay productos disponibles.</p>
