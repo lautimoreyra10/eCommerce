@@ -1,11 +1,11 @@
 ---
-/* import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
- */
 // Carga el estado de autenticación desde el almacenamiento local (TypeScript)
 /* const isAuthenticated: boolean = Boolean(localStorage.getItem("token")); */
 ---
-
+<link
+      rel="stylesheet"
+      href="/node_modules/@fortawesome/fontawesome-free/css/all.min.css"
+    />
 <nav class="bg-gray-900 text-white px-12 py-3 flex items-center justify-between shadow-xl">
   <div class="text-2xl font-bold">eCommerce</div>
   <div class="w-1/3">
@@ -15,19 +15,20 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
     <a href="/">Inicio</a>
     <a href="/products">Productos</a>
     <a href="/about">Acerca de</a>
-    <a href="/cart"></a>
     <button
       id="user-icon-button"
       class="user-icon-button"
       style="background: none; border: none; cursor: pointer; padding: 0; margin: 0"
     >
+    <i class="fas fa-user"></i>
     </button>
+    <button id="cart-icon"><i class="fas fa-cart-plus"></i></button>
   </div>
 </nav>
 
 <script is:inline>
   document.addEventListener("DOMContentLoaded", () => {
-    const userIconButton = document.getElementById("user-icon-button");
+    const userIconButton = document.getElementById("user-icon");
 
   /*   const isAuthenticated = Boolean(localStorage.getItem("token"));
  */
@@ -39,4 +40,16 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
       }
     }
   });
+  document.addEventListener("DOMContentLoaded", function() {
+        // Obtener el elemento por ID
+        const cartIcon = document.getElementById("cart-icon");
+
+        // Redirigir a la página del carrito al hacer clic en el ícono
+        if (cartIcon) {
+          cartIcon.addEventListener("click", function() {
+            // Redirige a la página cartpage.astro
+            window.location.href = "/cartpage";
+          });
+        }
+      });
 </script>
