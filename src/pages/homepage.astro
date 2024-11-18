@@ -31,7 +31,7 @@ await fetchProducts();
         <!-- Iteramos sobre los productos -->
         {products.length > 0 ? (
           products.map((product) => (
-            <div class="basis-full sm:basis-1/2 lg:basis-1/4 p-4">
+            <div id ="single-product-cards" class="basis-full sm:basis-1/2 lg:basis-1/4 p-4">
               <ProductCard product={product} />
             </div>
           ))
@@ -41,4 +41,10 @@ await fetchProducts();
       </div>
     </div>
   </body>
+  <script>
+    const onClick = document.getElementById("single-product-cards");
+    onClick?.addEventListener("click", () => {
+      window.location.href = "/productdetail";
+    })
+  </script>
 </html>
