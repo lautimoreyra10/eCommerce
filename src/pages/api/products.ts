@@ -4,16 +4,17 @@ export const get: APIRoute = async ({ request }) => {
   const response = await fetch('https://commercial-api.vulktech.com/products');
   if (response.ok) {
     const products = await response.json();
-    return {
-      body: JSON.stringify(products),
+    return new Response(JSON.stringify(products), {
       headers: {
         'Content-Type': 'application/json',
       },
-    };
+    });
   } else {
-    return {
+    return new Response('Error al obtener productos', {
       status: 500,
-      body: 'Error al obtener productos',
-    };
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+    });
   }
 };
