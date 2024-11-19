@@ -1,6 +1,7 @@
 ---
 import ProductCard from "../components/productcard.astro";
 import Navbar from "../components/navbar.astro";
+
 let products = [] as Array<{
   id: number;
   name: string;
@@ -30,36 +31,40 @@ await fetchProducts();
 ---
 
 <html>
-  <head> </head>
+  <head></head>
   <body class="font-sans text-gray-700">
     <Navbar />
     <div class="container mx-auto max-w-screen-xl px-4 mt-10">
       <div class="flex flex-wrap gap-5">
         <!-- Iteramos sobre los productos -->
-        {
-          products.length > 0 ? (
-            products.map((product) => (
-              <button
-                id="single-product-cards"
-                class="basis-full sm:basis-1/2 lg:basis-1/4 p-4"
-              >
-                <ProductCard product={product} />
-              </button>
-            ))
-          ) : (
-            <p>No hay productos disponibles.</p>
-          )
-        }
+        {products.length > 0 ? (
+          products.map((product) => (
+            <button
+              class="basis-full sm:basis-1/2 lg:basis-1/4 p-4"
+              data-product-id={product.id}  <!-- Usamos data-product-id para almacenar el id -->
+            >
+              <ProductCard product={product} />
+            </button>
+          ))
+        ) : (
+          <p>No hay productos disponibles.</p>
+        )}
       </div>
     </div>
-  </body>
-  <script>
-    const productCards = document.querySelectorAll("#single-product-cards");
 
-    productCards.forEach((card) => {
-      card.addEventListener("click", () => {
-        window.location.href = "/productdetail";
+    <script>
+      // Seleccionamos todos los botones con el atributo data-product-id
+      const productCards = document.querySelectorAll("button[data-product-id]");
+
+      productCards.forEach((card) => {
+        card.addEventListener("click", () => {
+          // Accedemos al id del producto haciendo uso de getAttribute
+          const productId = card.getAttribute("data-product-id");
+          if (productId) {
+            window.location.href = `/productdetail?id=${productId}`;  // Redirigimos a la página de detalle
+          }
+        });
       });
-    });
-  </script>
+    </script>
+  </body>
 </html>
